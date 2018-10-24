@@ -2,6 +2,7 @@ package com.colin;
 
 import processing.core.PApplet;
 import processing.core.PVector;
+import processing.opengl.PJOGL;
 
 public class MainApp extends PApplet{
 
@@ -18,12 +19,13 @@ public class MainApp extends PApplet{
         window = new PVector(width , height);
         surface.setTitle("Colin's Workspace Two");
         surface.setResizable(false);
+        surface.setLocation(-3, -3);
         previousMil = millis();
     }
 
     public void settings() {
-        size(displayWidth, displayHeight - 70, P2D);
-        //PJOGL.setIcon("assets/icon.png");
+        size(displayWidth, displayHeight - 61, P2D);
+        PJOGL.setIcon("assets/icon.png");
     }
 
     public void draw() {
