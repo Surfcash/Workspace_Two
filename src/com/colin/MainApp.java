@@ -46,4 +46,10 @@ public class MainApp extends PApplet{
             window = new PVector(width , height);
         }
     }
+
+    public void keyPressed() {
+        if(key == ESC) {
+            key = 0;
+        }
+    }
 }

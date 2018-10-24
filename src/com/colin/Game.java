@@ -5,14 +5,16 @@ import processing.core.PFont;
 
 class Game {
     private PApplet p;
+    short level = 0;
     SceneManager sceneManager;
-    public PFont font;
-    int level = 0;
+    SpriteManager spriteManager;
+    PFont font;
 
     Game(PApplet parent) {
         p = parent;
         font = p.createFont("assets/fonts/Serangkai.ttf", 150);
         sceneManager = new SceneManager(p);
+        spriteManager = new SpriteManager(p);
     }
 
     void update() {

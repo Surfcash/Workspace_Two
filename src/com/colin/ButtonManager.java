@@ -37,6 +37,12 @@ class ButtonManager {
                 if(i.collidesPoint(new PVector(p.mouseX, p.mouseY))) {
                     switch(i.label.label) {
                         case "START" : {
+                            game.sceneManager.level = 1;
+                            game.sceneManager.game();
+                            break;
+                        }
+                        case "RESUME" : {
+                            game.sceneManager.scene = game.sceneManager.storedScene;
                             break;
                         }
                         case "OPTIONS" : {
@@ -46,6 +52,7 @@ class ButtonManager {
                             break;
                         }
                         case "QUIT TO TITLE" : {
+                            game.sceneManager.storedScene = game.sceneManager.scene;
                             game.sceneManager.title();
                             break;
                         }

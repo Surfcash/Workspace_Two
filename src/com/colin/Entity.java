@@ -5,8 +5,8 @@ import processing.core.PVector;
 class Entity extends BoxCollider {
 
     private PVector vel = new PVector(0, 0);
-    private PVector friction = new PVector(0.25F, 0.25F);
-    private PVector gravity = new PVector(0, 4.5F);
+    private PVector friction = new PVector(3F, 3F);
+    private PVector gravity = new PVector(0, 3F);
 
     Entity() {}
 

@@ -7,24 +7,27 @@ import java.util.ArrayList;
 class Scene {
     ArrayList<Label> labels = new ArrayList<>();
     ButtonManager buttonManager;
-    int color;
-    Player player;
-    TileMap level;
+    LevelManager level;
     PApplet p;
 
 
     Scene(PApplet parent) {
         p = parent;
-        color = p.color(0, 0, 0);
         buttonManager = new ButtonManager(p);
     }
 
     void update() {
+        if(level != null) {
+            level.update();
+        }
         buttonManager.update();
     }
 
     void render() {
-        p.background(color);
+        p.background(0);
+        if(level != null) {
+            level.render();
+        }
         renderLabels();
         buttonManager.render();
     }
