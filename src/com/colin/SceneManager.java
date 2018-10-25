@@ -27,8 +27,19 @@ class SceneManager {
     private void sceneControls() {
         if(scene.level != null) {
             if(IN_ESCAPE) {
+                IN_ESCAPE = false;
                 storedScene = scene;
                 pause();
+            }
+        }
+        else {
+            if(IN_DOWN) {
+                IN_DOWN = false;
+                scene.buttonManager.hoverNext();
+            }
+            if(IN_UP) {
+                IN_UP = false;
+                scene.buttonManager.hoverPrevious();
             }
         }
     }

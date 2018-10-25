@@ -9,7 +9,7 @@ class Entity extends BoxCollider {
 
     PVector vel = new PVector(0, 0);
     private PVector friction = new PVector(3F, 3F);
-    private PVector gravity = new PVector(0, 3F);
+    private PVector gravity = new PVector(0, 2F);
 
     Entity() {
         super();

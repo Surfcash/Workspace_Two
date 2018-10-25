@@ -10,7 +10,8 @@ import static processing.core.PApplet.constrain;
 
 class Player extends Entity{
     private SpriteSheet spritesheet;
-    private short animationState;
+    private short animationState = 1;
+    private float jumpWait, jumpState;
     private PApplet p;
 
     Player(PVector position, PApplet parent) {
@@ -20,26 +21,37 @@ class Player extends Entity{
         super.width = spritesheet.size.x - 46;
         super.height = spritesheet.size.y;
 
-        animationState = 1;
+        jumpWait = jumpState = 3;
+
         assignBounds();
         p = parent;
     }
 
     void update() {
         ArrayList<BoxCollider> colliders = new ArrayList<>();
+
         detectSurfaces(colliders);
         detectWindowBounds();
-        applyControls();
 
+        updateJumpWait();
+
+        applyControls();
         applyFriction();
         applyGravity();
         applyVelocity();
+
         constrainToWindow();
     }
 
     void render() {
         p.imageMode(p.CENTER);
         p.image(spritesheet.sprites[animationState], pos.x, pos.y);
+    }
+
+    private void updateJumpWait() {
+        if(surfaceBottom) {
+            if(jumpState < jumpWait) jumpState += 1 * deltaTime;
+        }
     }
 
     private void applyControls() {
@@ -52,7 +64,10 @@ class Player extends Entity{
             vel.x = 8 * deltaTime;
         }
         if(IN_UP && surfaceBottom) {
-            vel.y = -(1.75F + 26.25F * deltaTime);
+            if(jumpState >= jumpWait) {
+                vel.y = -(1.75F + 26.25F * deltaTime);
+                jumpState = 0;
+            }
         }
     }
 

@@ -6,7 +6,7 @@ import processing.opengl.PJOGL;
 
 public class MainApp extends PApplet{
 
-    static boolean MOUSE_LEFT, IN_LEFT, IN_RIGHT, IN_UP, IN_ESCAPE = false;
+    static boolean MOUSE_LEFT, IN_LEFT, IN_RIGHT, IN_UP, IN_DOWN, IN_ESCAPE, IN_ENTER = false;
     private float previousMil;
     static float deltaTime;
     static Game game;
@@ -52,7 +52,12 @@ public class MainApp extends PApplet{
 
     public void keyPressed() {
         if(key == ESC) key = 0;
+        if(key == ENTER) key = 0;
         switch(keyCode) {
+            case 10 : {
+                IN_ENTER = true;
+                break;
+            }
             case 27: {
                 IN_ESCAPE = true;
                 break;
@@ -61,6 +66,11 @@ public class MainApp extends PApplet{
             case 38 :
             case 87 : {
                 IN_UP = true;
+                break;
+            }
+            case 40 :
+            case 83 : {
+                IN_DOWN = true;
                 break;
             }
             case 37 :
@@ -81,6 +91,10 @@ public class MainApp extends PApplet{
 
     public void keyReleased() {
         switch(keyCode) {
+            case 13 : {
+                IN_ENTER = false;
+                break;
+            }
             case 27: {
                 IN_ESCAPE = false;
                 break;
@@ -89,6 +103,11 @@ public class MainApp extends PApplet{
             case 38 :
             case 87 : {
                 IN_UP = false;
+                break;
+            }
+            case 40 :
+            case 83 : {
+                IN_DOWN = false;
                 break;
             }
             case 37 :
