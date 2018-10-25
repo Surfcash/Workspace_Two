@@ -6,12 +6,14 @@ import processing.opengl.PJOGL;
 
 public class MainApp extends PApplet{
 
+    static boolean MOUSE_LEFT, IN_LEFT, IN_RIGHT, IN_UP, IN_ESCAPE = false;
     static float previousMil, deltaTime;
     static Game game;
     PVector window;
 
     public static void main(String[] args) {
-        PApplet.main("com.colin.MainApp");
+        String[] PApp = {"com.colin.MainApp", "com.colin.InputManager"};
+        PApplet.main(PApp);
     }
 
     public void setup() {
@@ -48,8 +50,83 @@ public class MainApp extends PApplet{
     }
 
     public void keyPressed() {
-        if(key == ESC) {
-            key = 0;
+        if(key == ESC) key = 0;
+        switch(keyCode) {
+            case 27: {
+                IN_ESCAPE = true;
+                break;
+            }
+            case 32 :
+            case 38 :
+            case 87 : {
+                IN_UP = true;
+                break;
+            }
+            case 37 :
+            case 65 : {
+                IN_LEFT = true;
+                break;
+            }
+            case 39 :
+            case 68 : {
+                IN_RIGHT = true;
+                break;
+            }
+            default : {
+                break;
+            }
+        }
+    }
+
+    public void keyReleased() {
+        switch(keyCode) {
+            case 27: {
+                IN_ESCAPE = false;
+                break;
+            }
+            case 32 :
+            case 38 :
+            case 87 : {
+                IN_UP = false;
+                break;
+            }
+            case 37 :
+            case 65 : {
+                IN_LEFT = false;
+                break;
+            }
+            case 39 :
+            case 68 : {
+                IN_RIGHT = false;
+                break;
+            }
+            default : {
+                break;
+            }
+        }
+    }
+
+    public void mousePressed() {
+        switch(mouseButton) {
+            case LEFT : {
+                MOUSE_LEFT = true;
+                break;
+            }
+            default :{
+
+            }
+        }
+    }
+
+    public void mouseReleased() {
+        switch(mouseButton) {
+            case LEFT : {
+                MOUSE_LEFT = false;
+                break;
+            }
+            default : {
+                break;
+            }
         }
     }
 }

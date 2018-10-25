@@ -32,7 +32,7 @@ class ButtonManager {
     }
 
     void update() {
-        if(p.mousePressed && p.mouseButton == p.LEFT) {
+        if(MOUSE_LEFT) {
             for(Button i : buttons) {
                 if(i.collidesPoint(new PVector(p.mouseX, p.mouseY))) {
                     switch(i.label.label) {
@@ -64,7 +64,7 @@ class ButtonManager {
                             break;
                         }
                     }
-                    p.mousePressed = false;
+                    MOUSE_LEFT = false;
                 }
             }
         }

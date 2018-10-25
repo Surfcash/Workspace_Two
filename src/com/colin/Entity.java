@@ -4,7 +4,7 @@ import processing.core.PVector;
 
 class Entity extends BoxCollider {
 
-    private PVector vel = new PVector(0, 0);
+    PVector vel = new PVector(0, 0);
     private PVector friction = new PVector(3F, 3F);
     private PVector gravity = new PVector(0, 3F);
 
@@ -25,6 +25,7 @@ class Entity extends BoxCollider {
         } else if(!surfaceTop && vel.y < 0) {
             pos.y += vel.y;
         }
+        assignBounds();
     }
 
     void applyGravity() {
