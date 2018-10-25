@@ -11,7 +11,8 @@ class ButtonManager {
 
     private ArrayList<Button> buttons = new ArrayList<>();
     private PApplet p;
-    float width, height, tab;
+    float width;
+    private float height, tab;
     private PVector pos;
 
 
@@ -41,18 +42,20 @@ class ButtonManager {
                             game.sceneManager.game();
                             break;
                         }
-                        case "RESUME" : {
-                            game.sceneManager.scene = game.sceneManager.storedScene;
-                            break;
-                        }
                         case "OPTIONS" : {
                             break;
                         }
+                        case "CONTINUE" :
+                        case "RESUME" :
                         case "RETURN" : {
+                            game.sceneManager.scene = game.sceneManager.storedScene;
                             break;
                         }
+                        case "RESTART" : {
+                            game.sceneManager.level = 0;
+                            game.sceneManager.title();
+                        }
                         case "QUIT TO TITLE" : {
-                            game.sceneManager.storedScene = game.sceneManager.scene;
                             game.sceneManager.title();
                             break;
                         }

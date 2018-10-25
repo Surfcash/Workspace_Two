@@ -7,12 +7,13 @@ import processing.opengl.PJOGL;
 public class MainApp extends PApplet{
 
     static boolean MOUSE_LEFT, IN_LEFT, IN_RIGHT, IN_UP, IN_ESCAPE = false;
-    static float previousMil, deltaTime;
+    private float previousMil;
+    static float deltaTime;
     static Game game;
-    PVector window;
+    private PVector window;
 
     public static void main(String[] args) {
-        String[] PApp = {"com.colin.MainApp", "com.colin.InputManager"};
+        String[] PApp = {"com.colin.MainApp"};
         PApplet.main(PApp);
     }
 

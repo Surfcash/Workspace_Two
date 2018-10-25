@@ -2,6 +2,7 @@ package com.colin;
 
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.core.PVector;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ class SpriteManager {
         }
         return null;
     }
+
 
     private class Sprite {
         PImage img;

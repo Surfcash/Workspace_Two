@@ -2,13 +2,18 @@ package com.colin;
 
 import processing.core.PVector;
 
+import static com.colin.MainApp.deltaTime;
+import static processing.core.PApplet.sq;
+
 class Entity extends BoxCollider {
 
     PVector vel = new PVector(0, 0);
     private PVector friction = new PVector(3F, 3F);
     private PVector gravity = new PVector(0, 3F);
 
-    Entity() {}
+    Entity() {
+        super();
+    }
 
     Entity(PVector position, float wide, float tall) {
         super(position, wide, tall);
@@ -30,7 +35,7 @@ class Entity extends BoxCollider {
 
     void applyGravity() {
         if(!surfaceBottom) {
-            vel.add(gravity);
+            vel.y += gravity.y * sq(deltaTime);
         }
     }
 

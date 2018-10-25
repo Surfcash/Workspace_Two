@@ -2,7 +2,7 @@ package com.colin;
 
 import processing.core.PApplet;
 
-import static com.colin.MainApp.game;
+import static com.colin.MainApp.*;
 
 class SceneManager {
     Scene scene, storedScene;
@@ -12,16 +12,25 @@ class SceneManager {
     SceneManager(PApplet parent) {
         p = parent;
         scene = new Scene(p);
-        level = 0;
         title();
     }
 
     void update() {
+        sceneControls();
         scene.update();
     }
 
     void render() {
         scene.render();
+    }
+
+    private void sceneControls() {
+        if(scene.level != null) {
+            if(IN_ESCAPE) {
+                storedScene = scene;
+                pause();
+            }
+        }
     }
 
     void title() {
@@ -38,7 +47,7 @@ class SceneManager {
         scene.buttonManager.add("QUIT");
     }
 
-    void pause() {
+    private void pause() {
         scene = new Scene(p);
         scene.labels.add(new Label("PAUSED", p));
         scene.buttonManager.width = 500;

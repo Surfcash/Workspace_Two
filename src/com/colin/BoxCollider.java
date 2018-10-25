@@ -4,6 +4,8 @@ import processing.core.PVector;
 
 import java.util.ArrayList;
 
+import static java.lang.Math.abs;
+
 class BoxCollider {
 
     PVector pos;
@@ -11,7 +13,9 @@ class BoxCollider {
     private float left, right, top, bottom;
     boolean surfaceLeft, surfaceRight, surfaceTop, surfaceBottom;
 
-    BoxCollider() {}
+    BoxCollider() {
+        surfaceLeft = surfaceRight = surfaceTop = surfaceBottom = false;
+    }
 
     BoxCollider(PVector position, float wide, float tall) {
         pos = position;
@@ -45,6 +49,12 @@ class BoxCollider {
         } else if(top < collider.bottom && bottom > collider.bottom) {
             deltaFix.y = collider.bottom - top;
             surfaceTop = true;
+        }
+
+        if(abs(deltaFix.x) > abs(deltaFix.y)) {
+            deltaFix.y = 0;
+        } else if(abs(deltaFix.x) < abs(deltaFix.y)) {
+            deltaFix.x = 0;
         }
 
         return deltaFix;
