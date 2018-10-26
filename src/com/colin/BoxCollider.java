@@ -2,15 +2,14 @@ package com.colin;
 
 import processing.core.PVector;
 
-import java.util.ArrayList;
-
 import static java.lang.Math.abs;
 
 class BoxCollider {
 
     PVector pos;
+    BoxCollider previous;
     float width, height;
-    private float left, right, top, bottom;
+    float left, right, top, bottom;
     boolean surfaceLeft, surfaceRight, surfaceTop, surfaceBottom;
 
     BoxCollider() {
@@ -25,6 +24,11 @@ class BoxCollider {
         surfaceLeft = surfaceRight = surfaceTop = surfaceBottom = false;
     }
 
+    private void addPos(PVector delta) {
+        pos.add(delta);
+        assignBounds();
+    }
+
     boolean collidesBox(BoxCollider collider) {
         return ((right > collider.left) && (left < collider.right) && (bottom > collider.top) && (top < collider.bottom));
     }
@@ -33,22 +37,20 @@ class BoxCollider {
         return ((right > collider.x) && (left < collider.x) && (bottom > collider.y) && (top < collider.y));
     }
 
-    PVector deltaFixCollidesBox(BoxCollider collider) {
+    void deltaFixCollidesBox(BoxCollider collider, PVector vel) {
         PVector deltaFix = new PVector(0, 0);
-        if(right > collider.left && left < collider.left) {
+        if(right > collider.left && previous.right < collider.left) {
             deltaFix.x = collider.left - right;
-            surfaceRight = true;
-        } else if(left < collider.right && right > collider.right) {
-            surfaceLeft = true;
+        }
+        if(left < collider.right && previous.left > collider.right) {
             deltaFix.x = collider.right - left;
         }
 
-        if(bottom > collider.top && top < collider.top) {
+        if(bottom > collider.top && previous.bottom < collider.top) {
             deltaFix.y = collider.top - bottom;
-            surfaceBottom = true;
-        } else if(top < collider.bottom && bottom > collider.bottom) {
+        }
+        if(top < collider.bottom && previous.top > collider.bottom) {
             deltaFix.y = collider.bottom - top;
-            surfaceTop = true;
         }
 
         if(abs(deltaFix.x) > abs(deltaFix.y)) {
@@ -56,36 +58,53 @@ class BoxCollider {
         } else if(abs(deltaFix.x) < abs(deltaFix.y)) {
             deltaFix.x = 0;
         }
+        System.out.println("\nCOLLISION");
+        System.out.println("LEFT: " + left + ", " + collider.right);
+        System.out.println("RIGHT: " + right + ", " + collider.left);
+        System.out.println("BOTTOM: " + bottom + ", " + collider.top);
+        System.out.println("TOP: " + top + ", " + collider.bottom);
 
-        return deltaFix;
+        addPos(deltaFix);
+
+        System.out.println("\nFIXED");
+        System.out.println("LEFT: " + left + ", " + collider.right);
+        System.out.println("RIGHT: " + right + ", " + collider.left);
+        System.out.println("BOTTOM: " + bottom + ", " + collider.top);
+        System.out.println("TOP: " + top + ", " + collider.bottom);
+
+        System.out.println("\nDELTA " + deltaFix.x + ", " + deltaFix.y);
     }
 
-    void detectSurfaces(ArrayList<BoxCollider> colliders) {
-        surfaceLeft = surfaceRight = surfaceTop = surfaceBottom = false;
-        for(BoxCollider i : colliders) {
-            if(left == i.right) {
-                surfaceLeft = true;
-                break;
-            }
-            if(right == i.left) {
-                surfaceRight = true;
-                break;
-            }
-            if(bottom == i.top) {
+    void detectSurfaces(BoxCollider collider) {
+        if((right > collider.left) && (left < collider.right)) {
+            if (bottom == collider.top) {
                 surfaceBottom = true;
-                break;
-            }
-            if(top == i.bottom) {
+            } else if (top == collider.bottom) {
                 surfaceTop = true;
-                break;
+            }
+        }
+        if((bottom > collider.top) && (top < collider.bottom)) {
+            if (left == collider.right) {
+                surfaceLeft = true;
+            } else if (right == collider.left) {
+                surfaceRight = true;
             }
         }
     }
+
+    void setSurfacesFalse() {
+        surfaceLeft = surfaceRight = surfaceTop = surfaceBottom = false;
+    }
+
 
     void assignBounds() {
         left = pos.x - width / 2F;
         right = pos.x + width / 2F;
         top = pos.y - height / 2F;
         bottom = pos.y + height / 2F;
+    }
+
+    void setPreviousPosition() {
+        previous = new BoxCollider(pos, width, height);
     }
 }

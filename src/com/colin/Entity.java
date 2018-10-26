@@ -8,7 +8,7 @@ import static processing.core.PApplet.sq;
 class Entity extends BoxCollider {
 
     PVector vel = new PVector(0, 0);
-    private PVector friction = new PVector(3F, 3F);
+    private PVector friction = new PVector(1F, 1F);
     private PVector gravity = new PVector(0, 2F);
 
     Entity() {
@@ -19,16 +19,16 @@ class Entity extends BoxCollider {
         super(position, wide, tall);
     }
 
-    void applyVelocity() {
+    void applyVelocity(PVector deltaVel) {
         if(!surfaceLeft && vel.x < 0) {
-            pos.x += vel.x;
-        } else if(!surfaceRight && vel.x > 0) {
-            pos.x += vel.x;
+            pos.x += deltaVel.x;
+        } else if(!surfaceRight && deltaVel.x > 0) {
+            pos.x += deltaVel.x;
         }
-        if(!surfaceBottom && vel.y > 0) {
-            pos.y += vel.y;
-        } else if(!surfaceTop && vel.y < 0) {
-            pos.y += vel.y;
+        if(!surfaceBottom && deltaVel.y > 0) {
+            pos.y += deltaVel.y;
+        } else if(!surfaceTop && deltaVel.y < 0) {
+            pos.y += deltaVel.y;
         }
         assignBounds();
     }
@@ -40,41 +40,10 @@ class Entity extends BoxCollider {
     }
 
     void applyFriction() {
-        if(surfaceLeft || surfaceRight) {
-            if(vel.y > 0) {
-                if(vel.y + -friction.y >= 0) {
-                    vel.y += -friction.y;
-                }
-                else {
-                    vel.y = 0;
-                }
-            }
-            else if(vel.y < 0) {
-                if(vel.y + friction.y <= 0) {
-                    vel.y += friction.y;
-                }
-                else {
-                    vel.y = 0;
-                }
-            }
-        }
-        else if(surfaceBottom || surfaceTop) {
-            if(vel.x > 0) {
-                if(vel.x + -friction.x >= 0) {
-                    vel.x += -friction.x;
-                }
-                else {
-                    vel.x = 0;
-                }
-            }
-            else if(vel.x < 0) {
-                if (vel.x + friction.x <= 0) {
-                    vel.x += friction.x;
-                }
-                else {
-                    vel.x =0;
-                }
-            }
+        if(surfaceBottom || surfaceTop) {
+            if(vel.x >= friction.x * deltaTime) vel.x += -friction.x * deltaTime;
+            else if (vel.x <= -friction.x * deltaTime) vel.x += friction.x * deltaTime;
+            if(vel.x > -friction.x * deltaTime && vel.x < friction.x * deltaTime) vel.x = 0;
         }
     }
 }

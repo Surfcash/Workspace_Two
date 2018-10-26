@@ -39,7 +39,7 @@ class SpriteManager {
         //loadSpritesFromFolder("assets/sprites/particles", "p_");
         loadSpritesFromFolder("assets/sprites/entity", "e_");
         loadSpritesFromFolder("assets/sprites/scene", "s_");
-        //loadSpritesFromFolder("assets/sprites/map", "m_");
+        loadSpritesFromFolder("assets/sprites/map", "m_");
         System.out.println("\nFinished.");
     }
 

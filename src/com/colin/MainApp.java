@@ -10,7 +10,7 @@ public class MainApp extends PApplet{
     private float previousMil;
     static float deltaTime;
     static Game game;
-    private PVector window;
+    static PVector window;
 
     public static void main(String[] args) {
         String[] PApp = {"com.colin.MainApp"};
