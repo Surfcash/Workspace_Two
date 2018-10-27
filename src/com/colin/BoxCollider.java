@@ -3,11 +3,11 @@ package com.colin;
 import processing.core.PVector;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.floor;
 
 class BoxCollider {
 
     PVector pos;
-    BoxCollider previous;
     float width, height;
     float left, right, top, bottom;
     boolean surfaceLeft, surfaceRight, surfaceTop, surfaceBottom;
@@ -29,6 +29,11 @@ class BoxCollider {
         assignBounds();
     }
 
+    void subPos(PVector delta) {
+        pos.sub(delta);
+        assignBounds();
+    }
+
     boolean collidesBox(BoxCollider collider) {
         return ((right > collider.left) && (left < collider.right) && (bottom > collider.top) && (top < collider.bottom));
     }
@@ -39,17 +44,15 @@ class BoxCollider {
 
     void deltaFixCollidesBox(BoxCollider collider, PVector vel) {
         PVector deltaFix = new PVector(0, 0);
-        if(right > collider.left && previous.right < collider.left) {
+        if(right > collider.left && floor(right - vel.x) <= floor(collider.left)) {
             deltaFix.x = collider.left - right;
-        }
-        if(left < collider.right && previous.left > collider.right) {
+        } else if(left < collider.right && floor(left - vel.x) >= floor(collider.right)) {
             deltaFix.x = collider.right - left;
         }
 
-        if(bottom > collider.top && previous.bottom < collider.top) {
+        if(bottom > collider.top && floor(bottom - vel.y) <= floor(collider.top)) {
             deltaFix.y = collider.top - bottom;
-        }
-        if(top < collider.bottom && previous.top > collider.bottom) {
+        } else if(top < collider.bottom && floor(top - vel.y) >= floor(collider.bottom)) {
             deltaFix.y = collider.bottom - top;
         }
 
@@ -58,6 +61,7 @@ class BoxCollider {
         } else if(abs(deltaFix.x) < abs(deltaFix.y)) {
             deltaFix.x = 0;
         }
+
         System.out.println("\nCOLLISION");
         System.out.println("LEFT: " + left + ", " + collider.right);
         System.out.println("RIGHT: " + right + ", " + collider.left);
@@ -73,6 +77,7 @@ class BoxCollider {
         System.out.println("TOP: " + top + ", " + collider.bottom);
 
         System.out.println("\nDELTA " + deltaFix.x + ", " + deltaFix.y);
+        System.out.println("VEL " + vel.x + ", " + vel.y);
     }
 
     void detectSurfaces(BoxCollider collider) {
@@ -102,9 +107,5 @@ class BoxCollider {
         right = pos.x + width / 2F;
         top = pos.y - height / 2F;
         bottom = pos.y + height / 2F;
-    }
-
-    void setPreviousPosition() {
-        previous = new BoxCollider(pos, width, height);
     }
 }

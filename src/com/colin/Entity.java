@@ -3,12 +3,13 @@ package com.colin;
 import processing.core.PVector;
 
 import static com.colin.MainApp.deltaTime;
+import static java.lang.StrictMath.round;
 import static processing.core.PApplet.sq;
 
 class Entity extends BoxCollider {
 
     PVector vel = new PVector(0, 0);
-    private PVector friction = new PVector(1F, 1F);
+    private PVector friction = new PVector(2F, 2F);
     private PVector gravity = new PVector(0, 2F);
 
     Entity() {
@@ -19,31 +20,32 @@ class Entity extends BoxCollider {
         super(position, wide, tall);
     }
 
-    void applyVelocity(PVector deltaVel) {
+    void applyVelocity() {
         if(!surfaceLeft && vel.x < 0) {
-            pos.x += deltaVel.x;
-        } else if(!surfaceRight && deltaVel.x > 0) {
-            pos.x += deltaVel.x;
+            pos.x += vel.x;
+        } else if(!surfaceRight && vel.x > 0) {
+            pos.x += vel.x;
         }
-        if(!surfaceBottom && deltaVel.y > 0) {
-            pos.y += deltaVel.y;
-        } else if(!surfaceTop && deltaVel.y < 0) {
-            pos.y += deltaVel.y;
+        if(!surfaceBottom && vel.y > 0) {
+            pos.y += vel.y;
+        } else if(!surfaceTop && vel.y < 0) {
+            pos.y += vel.y;
         }
         assignBounds();
     }
 
     void applyGravity() {
         if(!surfaceBottom) {
-            vel.y += gravity.y * sq(deltaTime);
+            vel.y += round(gravity.y * sq(deltaTime));
         }
     }
 
     void applyFriction() {
+        float frictionX = round(friction.x * deltaTime);
         if(surfaceBottom || surfaceTop) {
-            if(vel.x >= friction.x * deltaTime) vel.x += -friction.x * deltaTime;
-            else if (vel.x <= -friction.x * deltaTime) vel.x += friction.x * deltaTime;
-            if(vel.x > -friction.x * deltaTime && vel.x < friction.x * deltaTime) vel.x = 0;
+            if(vel.x >= frictionX) vel.x += -frictionX;
+            else if (vel.x <= -frictionX) vel.x += frictionX;
+            if(vel.x > -frictionX && vel.x < frictionX) vel.x = 0;
         }
     }
 }

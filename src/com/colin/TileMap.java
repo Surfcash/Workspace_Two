@@ -8,7 +8,8 @@ import static processing.core.PApplet.constrain;
 class TileMap {
     Tile[][] tiles;
     PApplet p;
-    PVector mapSize, tileMapSize, scrollMin, scrollMax, currentScroll;
+    PVector scrollMin, scrollMax, currentScroll;
+    private PVector mapSize, tileMapSize;
 
     TileMap(int width, int height, PApplet parent) {
         p = parent;
@@ -33,16 +34,33 @@ class TileMap {
         }
     }
 
-    void scrollMap(PVector scroll) {
-        currentScroll.x += scroll.x;
-        currentScroll.y += scroll.y;
-        constrainScroll();
-        scrollTiles();
-    }
+    PVector scrollMap(PVector scroll) {
+        PVector constrainedScroll = new PVector(0, 0);
 
-    void constrainScroll() {
-        currentScroll.x = constrain(currentScroll.x, scrollMin.x, scrollMax.x);
-        currentScroll.y = constrain(currentScroll.y, scrollMin.y, scrollMax.y);
+        if(currentScroll.x + scroll.x > scrollMax.x) {
+            constrainedScroll.x = scrollMax.x - currentScroll.x;
+        } else if(currentScroll.x + scroll.x < scrollMin.x) {
+            constrainedScroll.x = -currentScroll.x;
+        } else {
+            constrainedScroll.x = scroll.x;
+        }
+
+        if(currentScroll.y - scroll.y > scrollMax.y) {
+            constrainedScroll.y = -(scrollMax.y - currentScroll.y);
+        } else if(currentScroll.y - scroll.y < scrollMin.y) {
+            constrainedScroll.y = currentScroll.y;
+        } else {
+            constrainedScroll.y = scroll.y;
+        }
+
+        System.out.println("\nAttempting to scroll " + constrainedScroll.x + ", " + constrainedScroll.y);
+        System.out.println("X: " + currentScroll.x + " (" + scrollMin.x + ", " + scrollMax.x + ")");
+        System.out.println("Y: " + currentScroll.y + " (" + scrollMin.y + ", " + scrollMax.y + ")");
+        currentScroll.x += constrainedScroll.x;
+        currentScroll.y -= constrainedScroll.y;
+        scrollTiles();
+
+        return constrainedScroll;
     }
 
     void scrollTiles() {

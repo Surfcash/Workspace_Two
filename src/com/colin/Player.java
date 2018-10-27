@@ -19,14 +19,13 @@ class Player extends Entity{
         super.width = spritesheet.size.x - 46;
         super.height = spritesheet.size.y;
 
-        jumpWait = jumpState = 3;
+        jumpWait = jumpState = 2;
 
         assignBounds();
         p = parent;
     }
 
     void update() {
-        setPreviousPosition();
         setSurfacesFalse();
         detectTileSurfaces();
         applySurfaces();
@@ -37,9 +36,10 @@ class Player extends Entity{
         applyControls();
         applyFriction();
         applyGravity();
-        handleVelocity();
+        applyVelocity();
 
         constrainToTiles();
+        scrollScreen();
         constrainToWindow();
     }
 
@@ -57,15 +57,15 @@ class Player extends Entity{
     private void applyControls() {
         if(IN_LEFT && !surfaceLeft) {
             animationState = 0;
-            vel.x = -8 * deltaTime;
+            vel.x = round(-8 * deltaTime);
         }
         if(IN_RIGHT && !surfaceRight) {
             animationState = 1;
-            vel.x = 8 * deltaTime;
+            vel.x = round(8 * deltaTime);
         }
         if(IN_UP && surfaceBottom && !surfaceTop) {
             if(jumpState >= jumpWait) {
-                vel.y = -(1.75F + 26.25F * deltaTime);
+                vel.y = round(-(1.75F + 26.25F * deltaTime));
                 jumpState = 0;
             }
         }
@@ -99,48 +99,27 @@ class Player extends Entity{
     }
 
     private void constrainToTiles() {
+        boolean wasCollision;
         Tile[][] tiles = game.sceneManager.scene.level.tilemap.tiles;
-        for(int i = 0; i < tiles.length; i++) {
-            for(int j = 0; j < tiles[i].length; j++) {
-                if(tiles[i][j] != null) {
-                    if(collidesBox(tiles[i][j])) {
-                        System.out.println("\nCollided with " + i + ", " + j);
-                        deltaFixCollidesBox(tiles[i][j], vel);
+        int looped = 0;
+        do {
+            looped++;
+            wasCollision = false;
+            for (int i = 0; i < tiles.length; i++) {
+                for (int j = 0; j < tiles[i].length; j++) {
+                    if (tiles[i][j] != null) {
+                        if (collidesBox(tiles[i][j])) {
+                            System.out.println("\nCollided with " + i + ", " + j);
+                            deltaFixCollidesBox(tiles[i][j], vel);
+                            wasCollision = true;
+                        }
                     }
                 }
             }
+        } while(wasCollision && looped < 3);
+        if(looped >= 3) {
+            p.exit();
         }
-    }
-
-    private void handleVelocity() {
-        PVector scrollAmount = new PVector(0, 0);
-        PVector fixedVel = new PVector(0, 0);
-        TileMap tilemap = game.sceneManager.scene.level.tilemap;
-
-        if((pos.x < 0.4 * p.width && vel.x < 0) || (pos.x > 0.6 * p.width && vel.x > 0)) {
-            scrollAmount.x = vel.x;
-        }
-        else {
-            fixedVel.x = vel.x;
-        }
-        if((pos.y < 0.4 * p.height && vel.y < 0) || (pos.y > 0.6 * p.height && vel.y > 0)) {
-            scrollAmount.y = -vel.y;
-        }
-        else {
-            fixedVel.y = vel.y;
-        }
-
-
-        tilemap.scrollMap(scrollAmount);
-
-        if(tilemap.currentScroll.x == tilemap.scrollMin.x || tilemap.currentScroll.x == tilemap.scrollMax.x) {
-            fixedVel.x = vel.x;
-        }
-        if(tilemap.currentScroll.y == tilemap.scrollMin.y || tilemap.currentScroll.y == tilemap.scrollMax.y) {
-            fixedVel.y = vel.y;
-        }
-
-        applyVelocity(fixedVel);
     }
 
     private void applySurfaces() {
@@ -155,6 +134,21 @@ class Player extends Entity{
         }
         if(surfaceTop && vel.y < 0) {
             vel.y = 0;
+        }
+    }
+
+    private void scrollScreen() {
+        PVector scrollValue = new PVector(0, 0);
+        TileMap tilemap = game.sceneManager.scene.level.tilemap;
+        if((pos.x > p.width * 0.65 && tilemap.currentScroll.x != tilemap.scrollMax.x && vel.x > 0) || (pos.x < p.width * 0.35 && tilemap.currentScroll.x != tilemap.scrollMin.x && vel.x < 0)) {
+            scrollValue.x = vel.x;
+        }
+        if((pos.y > p.height * 0.65 && tilemap.currentScroll.y != tilemap.scrollMin.y && vel.y > 0) || (pos.y < p.height * 0.35 && tilemap.currentScroll.y != tilemap.scrollMax.y && vel.y < 0)) {
+            scrollValue.y = vel.y;
+        }
+
+        if (scrollValue.x != 0 || scrollValue.y != 0) {
+            subPos(tilemap.scrollMap(scrollValue));
         }
     }
 
