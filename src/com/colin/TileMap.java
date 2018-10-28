@@ -17,7 +17,7 @@ class TileMap {
         tileMapSize = new PVector(width, height);
         mapSize = new PVector(tileMapSize.x * 48, tileMapSize.y * 48);
         scrollMin = new PVector (0, 0);
-        scrollMax = new PVector(mapSize.x - p.width / 2F, mapSize.y - p.height / 2F);
+        scrollMax = new PVector(mapSize.x - p.width, mapSize.y - p.height);
         currentScroll = new PVector(scrollMin.x, scrollMin.y);
     }
 

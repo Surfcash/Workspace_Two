@@ -23,8 +23,8 @@ abstract class LevelLoader {
                     float alphaValue = p.alpha(pixelColor);
 
                     if(alphaValue != 0) {
-                        System.out.println("(" + j + "x, " + y + "y)");
-                        map.tiles[x][y] = new Tile(j, y);
+                        System.out.println("(" + j + "x, " + (y - 1) + "y)");
+                        map.tiles[x][y] = new Tile(j, y - 1);
                     }
                 }
             }

@@ -55,15 +55,31 @@ class Player extends Entity{
     }
 
     private void applyControls() {
-        if(IN_LEFT && !surfaceLeft) {
-            animationState = 0;
-            vel.x = round(-8 * deltaTime);
+        if(IN_LEFT) {
+            if(!surfaceLeft) {
+                animationState = 0;
+                vel.x = round(-8 * deltaTime);
+            }
+            else {
+                if(vel.y > 0) {
+                    if(jumpState < jumpWait) jumpState += 1 * deltaTime;
+                    vel.y = 0;
+                }
+            }
         }
-        if(IN_RIGHT && !surfaceRight) {
-            animationState = 1;
-            vel.x = round(8 * deltaTime);
+        if(IN_RIGHT) {
+            if(!surfaceRight) {
+                animationState = 1;
+                vel.x = round(8 * deltaTime);
+            }
+            else {
+                if(vel.y > 0)  {
+                    if(jumpState < jumpWait) jumpState += 1 * deltaTime;
+                    vel.y = 0;
+                }
+            }
         }
-        if(IN_UP && surfaceBottom && !surfaceTop) {
+        if(IN_UP && !surfaceTop) {
             if(jumpState >= jumpWait) {
                 vel.y = round(-(1.75F + 26.25F * deltaTime));
                 jumpState = 0;
@@ -154,6 +170,6 @@ class Player extends Entity{
 
     private void constrainToWindow() {
         pos.x = constrain(pos.x, width / 2F, p.width - width / 2F);
-        pos.y = constrain(pos.y, height / 2F, p.height - height / 2F);
+        pos.y = constrain(pos.y, -height / 2F, p.height - height / 2F);
     }
 }
